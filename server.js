@@ -1,4 +1,4 @@
-// server.js
+// server.js for Socket.IO with different port
 
 import { createServer } from 'http';
 import { Server } from 'socket.io';
