@@ -12,7 +12,7 @@ export default function handler(req, res) {
     const io = new Server(res.socket.server, {
       path: '/api/socket',
       cors: {
-        origin: 'http://localhost:3000',
+        origin: '*',
         methods: ['GET', 'POST'],
       },
     });
@@ -20,19 +20,9 @@ export default function handler(req, res) {
     io.on('connection', (socket) => {
       console.log('A user connected:', socket.id);
 
-      socket.on('join_room', (room) => {
-        socket.join(room);
-        console.log(`User ${socket.id} joined room ${room}`);
-      });
-
-      socket.on('leave_room', (room) => {
-        socket.leave(room);
-        console.log(`User ${socket.id} left room ${room}`);
-      });
-
-      socket.on('send_message', (room, message) => {
-        io.to(room).emit('message', message);
-        console.log(`Message sent to room ${room}: ${message}`);
+      socket.on('message', (message) => {
+        console.log(`Message from user ${socket.id}: ${message}`);
+        socket.broadcast.emit('message', message);
       });
 
       socket.on('disconnect', () => {
